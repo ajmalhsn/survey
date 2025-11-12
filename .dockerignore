@@ -1,0 +1,16 @@
+# Ignore build output and IDE files
+target
+.git
+.gitignore
+Dockerfile
+.dockerignore
+*.md
+*.log
+.idea
+.vscode
+*.iml
+mvnw.cmd
+*.class
+.stackdump
+# local maven repository if present
+.m2
