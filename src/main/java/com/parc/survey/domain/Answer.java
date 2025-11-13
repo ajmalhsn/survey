@@ -2,8 +2,6 @@ package com.parc.survey.domain;
 
 import jakarta.persistence.Id;
 
-import com.parc.survey.domain.SurveyResponse;
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

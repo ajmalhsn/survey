@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import com.parc.survey.domain.Answer;
 import com.parc.survey.domain.Question;
 import com.parc.survey.domain.Survey;
-
 import com.parc.survey.domain.User;
-
 import com.parc.survey.dto.SurveyResponse;
 import com.parc.survey.dto.QuestionReport;
 import com.parc.survey.dto.ReportResponse;
@@ -90,12 +88,16 @@ public class SurveyService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
         
-        com.parc.survey.domain.SurveyResponse response = new com.parc.survey.domain.SurveyResponse();
-        response.setId(surveyId);
-        response.setAnswers(response.getAnswers());
+        // Create the ENTITY (not DTO) for SurveyResponse
+        com.parc.survey.domain.SurveyResponse responseEntity = new com.parc.survey.domain.SurveyResponse();
+        // Don't set ID - let it auto-generate
+        responseEntity.setSurvey(survey);
+        responseEntity.setUser(user);
         
-        com.parc.survey.domain.SurveyResponse savedResponse = responseRepository.save(response);
+        // Save the response entity
+        com.parc.survey.domain.SurveyResponse savedResponse = responseRepository.save(responseEntity);
         
+        // Create answers for each question
         for (AnswerRequest ar : request.getAnswers()) {
             Question question = questionRepository.findById(ar.getQuestionId())
                 .orElseThrow(() -> new RuntimeException("Question not found"));
@@ -104,6 +106,7 @@ public class SurveyService {
             answer.setQuestion(question);
             answer.setResponse(savedResponse);
             answer.setAnswerText(ar.getAnswerText());
+        
             answer.setAudioMimeType(ar.getAudioMimeType());
             answerRepository.save(answer);
         }
